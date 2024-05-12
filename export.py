@@ -346,6 +346,7 @@ def export_engine(model, im, file, half, dynamic, simplify, workspace=4, verbose
     onnx = file.with_suffix(".onnx")
 
     LOGGER.info(f"\n{prefix} starting export with TensorRT {trt.__version__}...")
+    is_trt10 = int(trt.__version__.split(".")[0]) >= 10  # is TensorRT >= 10
     assert onnx.exists(), f"failed to export ONNX file: {onnx}"
     f = file.with_suffix(".engine")  # TensorRT engine file
     logger = trt.Logger(trt.Logger.INFO)
@@ -354,9 +355,10 @@ def export_engine(model, im, file, half, dynamic, simplify, workspace=4, verbose
 
     builder = trt.Builder(logger)
     config = builder.create_builder_config()
-    config.max_workspace_size = workspace * 1 << 30
-    # config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, workspace << 30)  # fix TRT 8.4 deprecation notice
-
+    if is_trt10:
+        config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, workspace << 30)
+    else:  # TensorRT versions 7, 8
+        config.max_workspace_size = workspace * 1 << 30
     flag = 1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH)
     network = builder.create_network(flag)
     parser = trt.OnnxParser(network, logger)
@@ -381,8 +383,10 @@ def export_engine(model, im, file, half, dynamic, simplify, workspace=4, verbose
     LOGGER.info(f"{prefix} building FP{16 if builder.platform_has_fast_fp16 and half else 32} engine as {f}")
     if builder.platform_has_fast_fp16 and half:
         config.set_flag(trt.BuilderFlag.FP16)
-    with builder.build_engine(network, config) as engine, open(f, "wb") as t:
-        t.write(engine.serialize())
+
+    build = builder.build_serialized_network if is_trt10 else builder.build_engine
+    with build(network, config) as engine, open(f, "wb") as t:
+        t.write(engine if is_trt10 else engine.serialize())
     return f, None
 
 
@@ -405,7 +409,8 @@ def export_saved_model(
     try:
         import tensorflow as tf
     except Exception:
-        check_requirements(f"tensorflow{'' if torch.cuda.is_available() else '-macos' if MACOS else '-cpu'}")
+        check_requirements(f"tensorflow{'' if torch.cuda.is_available() else '-macos' if MACOS else '-cpu'}<=2.15.1")
+
         import tensorflow as tf
     from tensorflow.python.framework.convert_to_constants import convert_variables_to_constants_v2
 
