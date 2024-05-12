@@ -5,15 +5,16 @@ https://docs.luxonis.com/en/latest/pages/tutorials/first_steps/#first-steps-with
 requirements:
     depthai-sdk==1.9.4
 """
+
 import time
-from typing import Tuple
 from threading import Thread
+from typing import Tuple
 
 import cv2
-import torch
-import numpy as np
 import depthai
+import numpy as np
 import onnxruntime
+import torch
 
 from models.common import DetectMultiBackend
 from utils.augmentations import letterbox

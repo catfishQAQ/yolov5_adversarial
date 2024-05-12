@@ -1,10 +1,10 @@
 """Common utils."""
+
 import socket
 from typing import Tuple, Union
 
 import numpy as np
 from PIL import Image
-
 
 IMG_EXTNS = {".png", ".jpg", ".jpeg"}
 

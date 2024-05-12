@@ -1,38 +1,38 @@
 """Testing code for evaluating Adversarial patches against object detection."""
+
+import glob
 import io
+import json
 import os
 import os.path as osp
-import time
-import json
-import glob
 import random
-from pathlib import Path
-from typing import Optional, List, Tuple
+import time
 from contextlib import redirect_stdout
+from pathlib import Path
+from typing import List, Optional, Tuple
 
-import tqdm
 import numpy as np
-from PIL import Image
-from easydict import EasyDict as edict
 import torch
-from torchvision import transforms
+import tqdm
+from easydict import EasyDict as edict
+from PIL import Image
 from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
+from torchvision import transforms
 
-from models.common import DetectMultiBackend
-from utils.metrics import ConfusionMatrix
-from utils.general import non_max_suppression, xyxy2xywh
-from utils.torch_utils import select_device
-from utils.plots import Annotator, colors
-
+from adv_patch_gen.utils.common import IMG_EXTNS, BColors, pad_to_square
 from adv_patch_gen.utils.config_parser import get_argparser, load_config_object
 from adv_patch_gen.utils.patch import PatchApplier, PatchTransformer
-from adv_patch_gen.utils.common import pad_to_square, BColors, IMG_EXTNS
 from adv_patch_gen.utils.video import (
-    ffmpeg_create_video_from_image_dir,
-    ffmpeg_combine_two_vids,
     ffmpeg_combine_three_vids,
+    ffmpeg_combine_two_vids,
+    ffmpeg_create_video_from_image_dir,
 )
+from models.common import DetectMultiBackend
+from utils.general import non_max_suppression, xyxy2xywh
+from utils.metrics import ConfusionMatrix
+from utils.plots import Annotator, colors
+from utils.torch_utils import select_device
 
 # optionally set seed for repeatability
 SEED = 42

@@ -4,14 +4,15 @@ Convert VisDrone annotation format to YOLO labels format Works for training of Y
 YOLOv7 requires an additional txt file (Same name as the first parent directory) with paths to the images for the train,
 val & test splits
 """
+
+import argparse
+import glob
 import os
 import os.path as osp
-import glob
-import argparse
 from typing import Optional
 
-import tqdm
 import imagesize
+import tqdm
 
 # VisDrone annot fmt
 # <bbox_left>, <bbox_top>, <bbox_width>, <bbox_height>, <score>, <object_category>, <truncation>, <occlusion>

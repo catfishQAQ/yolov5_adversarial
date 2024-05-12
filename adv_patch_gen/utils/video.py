@@ -1,6 +1,6 @@
 import os.path as osp
+from subprocess import PIPE, Popen
 from typing import Optional
-from subprocess import Popen, PIPE
 
 
 def ffmpeg_create_video_from_image_dir(

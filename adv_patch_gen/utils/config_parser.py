@@ -1,6 +1,8 @@
 """Create argparse options for config files."""
-import json
+
 import argparse
+import json
+
 from easydict import EasyDict as edict
 
 

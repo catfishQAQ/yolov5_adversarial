@@ -3,8 +3,8 @@
 # Gradual increase in learning rate by a constant amount to avoid sudden increase in lr
 
 import warnings
-from torch.optim.lr_scheduler import _LRScheduler, ReduceLROnPlateau
 
+from torch.optim.lr_scheduler import ReduceLROnPlateau, _LRScheduler
 
 EPOCH_DEPRECATION_WARNING = (
     "The epoch parameter in `scheduler.step()` was not necessary and is being "

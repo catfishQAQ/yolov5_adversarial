@@ -1,6 +1,7 @@
 """Modules for creating adversarial object patch."""
+
 import math
-from typing import Union, Tuple
+from typing import Tuple, Union
 
 import numpy as np
 import torch
