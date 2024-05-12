@@ -10,7 +10,7 @@ Physical Adversarial Patch Attack
 
 https://github.com/SamSamhuns/yolov5_adversarial/assets/13418507/05c47fd2-44f0-42be-b6d9-ef485ce5e08d
 
-Physical Adversarial Patch Defense
+Physical Adversarial Patch Defense (Example given is not implemented in this paper)
 
 https://github.com/SamSamhuns/yolov5_adversarial/assets/13418507/b389449f-98a4-4167-9208-771cb98ce3ce
 
