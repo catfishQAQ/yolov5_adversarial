@@ -1,4 +1,5 @@
 """Loss functions used in patch generation."""
+
 from typing import Tuple
 
 import torch

@@ -4,8 +4,8 @@ import sys
 sys.path.append(".")
 
 import cv2
-from adv_patch_gen.conv_visdrone_2_yolo.utils import get_annot_img_paths, load_yolo_annots_as_np
 
+from adv_patch_gen.conv_visdrone_2_yolo.utils import get_annot_img_paths, load_yolo_annots_as_np
 
 # visdrone dataset classes
 # ignore(0), pedestrian(1), people(2), bicycle(3),

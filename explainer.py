@@ -17,16 +17,16 @@ from PIL import Image
 from pytorch_grad_cam import (
     AblationCAM,
     EigenCAM,
+    EigenGradCAM,
     FullGrad,
     GradCAM,
+    GradCAMElementWise,
     GradCAMPlusPlus,
     HiResCAM,
-    ScoreCAM,
-    XGradCAM,
-    EigenGradCAM,
-    GradCAMElementWise,
     LayerCAM,
     RandomCAM,
+    ScoreCAM,
+    XGradCAM,
 )
 from pytorch_grad_cam.utils.image import scale_cam_image, show_cam_on_image
 
@@ -36,13 +36,11 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
-from utils.general import print_args, check_file, non_max_suppression
-from utils.torch_utils import select_device
-
 from models.common import DetectMultiBackend
-from utils.dataloaders import LoadImages, IMG_FORMATS, VID_FORMATS
-from utils.general import check_img_size, scale_boxes
+from utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages
+from utils.general import check_file, check_img_size, non_max_suppression, print_args, scale_boxes
 from utils.plots import Annotator, colors
+from utils.torch_utils import select_device
 
 
 def yolo_reshape_transform(x):

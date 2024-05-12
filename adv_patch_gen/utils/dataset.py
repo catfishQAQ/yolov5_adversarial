@@ -1,17 +1,17 @@
 """Dataset Class for loading YOLO format datasets where the source data dir has the image and labels subdirs where each
 image must have a corresponding label file with the same name.
 """
+
 import glob
 import os.path as osp
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import numpy as np
-from PIL import Image
 import torch
 import torch.nn.functional as F
+from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
-
 
 IMG_EXTNS = {".png", ".jpg", ".jpeg"}
 

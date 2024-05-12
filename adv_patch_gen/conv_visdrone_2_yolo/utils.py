@@ -1,6 +1,6 @@
-import os
 import glob
-from typing import List, Tuple, Set
+import os
+from typing import List, Set, Tuple
 
 import numpy as np
 

@@ -3,38 +3,36 @@ Training code for Adversarial patch training.
 
 python train_patch.py --cfg config_json_file
 """
-import os
-import os.path as osp
-import time
-import json
-from contextlib import nullcontext
 
 import glob
+import json
+import os
+import os.path as osp
 import random
-import numpy as np
-from PIL import Image
-from tqdm import tqdm
-from easydict import EasyDict as edict
+import time
+from contextlib import nullcontext
 
+import numpy as np
 import torch
 import torch.nn.functional as F
-from torch import optim, autograd
-from torch.cuda.amp import autocast
-from torchvision import transforms as T
-
-from torch.utils.tensorboard import SummaryWriter
+from easydict import EasyDict as edict
+from PIL import Image
 from tensorboard import program
+from torch import autograd, optim
+from torch.cuda.amp import autocast
+from torch.utils.tensorboard import SummaryWriter
+from torchvision import transforms as T
+from tqdm import tqdm
 
-from models.common import DetectMultiBackend
-from utils.torch_utils import select_device
-from utils.general import non_max_suppression, xyxy2xywh
-
-from test_patch import PatchTester
+from adv_patch_gen.utils.common import IMG_EXTNS, is_port_in_use, pad_to_square
 from adv_patch_gen.utils.config_parser import get_argparser, load_config_object
-from adv_patch_gen.utils.common import is_port_in_use, pad_to_square, IMG_EXTNS
 from adv_patch_gen.utils.dataset import YOLODataset
+from adv_patch_gen.utils.loss import MaxProbExtractor, NPSLoss, SaliencyLoss, TotalVariationLoss
 from adv_patch_gen.utils.patch import PatchApplier, PatchTransformer
-from adv_patch_gen.utils.loss import MaxProbExtractor, SaliencyLoss, TotalVariationLoss, NPSLoss
+from models.common import DetectMultiBackend
+from test_patch import PatchTester
+from utils.general import non_max_suppression, xyxy2xywh
+from utils.torch_utils import select_device
 
 # optionally set seed for repeatability
 SEED = None
