@@ -37,6 +37,14 @@ Download Task 1 trainset, valset, and testset-dev sets from <https://github.com/
 
 Refer to [adv_patch_gen/conv_visdrone_2_yolo/README.md](adv_patch_gen/conv_visdrone_2_yolo/README.md)
 
+## Download YOLOv5 4 Class (Car,Van,Truck,Bus) detection weights trained on VisDrone-2019
+
+```shell
+# inside a python virtual environment
+pip install gdown
+gdown 1Nw71j_zw_TUrXjR6VRvgp5wJmDePZMoS
+```
+
 ## Train an adversarial patch against the detector
 
 Dataset paths should be correctly set in the config json file.
