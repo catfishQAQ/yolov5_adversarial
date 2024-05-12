@@ -33,7 +33,7 @@ Detailed instructions for setup and docker use at [adv_patch_gen/README.md](adv_
 
 Download Task 1 trainset, valset, and testset-dev sets from <https://github.com/VisDrone/VisDrone-Dataset>. Place data under `data/visdrone_data`.
 
-## Conver VisDrone Dataset to YOLO format
+## Convert VisDrone Dataset to YOLO format
 
 Refer to [adv_patch_gen/conv_visdrone_2_yolo/README.md](adv_patch_gen/conv_visdrone_2_yolo/README.md)
 
