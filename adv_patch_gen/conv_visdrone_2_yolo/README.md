@@ -7,9 +7,9 @@ Tested with python 3.8
 ```shell
 python -m venv venv
 source venv/bin/activate
-pip install tqdm==4.65.0
+pip install tqdm==4.66.4
 pip install imagesize==1.4.1
-pip install opencv-python==4.7.0.72
+pip install opencv-python==4.9.0.80
 ```
 
 ## VisDrone Dataset Format

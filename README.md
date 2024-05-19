@@ -18,7 +18,7 @@ https://github.com/SamSamhuns/yolov5_adversarial/assets/13418507/b389449f-98a4-4
 | :----------------------------------------------------------: | :--------------------------------------------------------: |
 | <img src="adv_patch_gen/media/visdrone_p.png" width="256" /> | <img src="adv_patch_gen/media/custom_p.png" width="256" /> |
 
-## Setup
+## 1. Setup
 
 Note: Install all required dependencies as mentioned in the main YOLOv5 repository and install additional yolov5 adversarial dependency as follows:
 
@@ -29,23 +29,26 @@ pip install -r adv_patch_gen/requirements.txt
 
 Detailed instructions for setup and docker use at [adv_patch_gen/README.md](adv_patch_gen/README.md)
 
-## Download VisDrone Dataset
+## 2. Download VisDrone Dataset
 
 Download Task 1 trainset, valset, and testset-dev sets from <https://github.com/VisDrone/VisDrone-Dataset>. Place data under `data/visdrone_data`.
 
-## Convert VisDrone Dataset to YOLO format
+## 3. Convert VisDrone Dataset to YOLO format
 
 Refer to [adv_patch_gen/conv_visdrone_2_yolo/README.md](adv_patch_gen/conv_visdrone_2_yolo/README.md)
 
-## Download YOLOv5 4 Class (Car,Van,Truck,Bus) detection weights trained on VisDrone-2019
+## 4. Download YOLOv5 4 Class (Car,Van,Truck,Bus) detection weights trained on VisDrone-2019
 
 ```shell
 # inside a python virtual environment
 pip install gdown
 gdown 1Nw71j_zw_TUrXjR6VRvgp5wJmDePZMoS
+# unzip models into runs/train directory
+mkdir -p runs/train
+unzip coco_e300_4Class_Vehicle.zip -d runs/train
 ```
 
-## Train an adversarial patch against the detector
+## 5. Train an adversarial patch against the detector
 
 Dataset paths should be correctly set in the config json file.
 
@@ -55,7 +58,7 @@ python train_patch.py --cfg adv_patch_gen/configs/base.json
 
 Instructions in creating the config json file present at [adv_patch_gen/configs/README.md](adv_patch_gen/configs/README.md).
 
-## Test the performance of the adversarial patch
+## 6. Test the performance of the adversarial patch
 
 ```shell
 python test_patch.py --cfg CONFIG_JSON_FILE -w YOLOV5_TARGET_MODEL_WEIGHTS_PATH -p PATCH_IMG_FILE_PATH --id IMG_DIR_PATH_FOR_TESTING --sd SAVE_DIR_PATH
