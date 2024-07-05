@@ -375,7 +375,7 @@ class PatchTrainer:
             all_labels, all_patch_preds, class_list=self.cfg.class_list, cls_id=cls_id
         )
 
-        print(f"Validation metrics for images with patches:")
+        print("Validation metrics for images with patches:")
         print(
             f"\tASR@thres={conf_thresh}: asr_s={asr_s:.3f},  asr_m={asr_m:.3f},  asr_l={asr_l:.3f},  asr_a={asr_a:.3f}"
         )

@@ -13,22 +13,18 @@ from pathlib import Path
 import cv2
 import numpy as np
 import torch
-from PIL import Image
 from pytorch_grad_cam import (
-    AblationCAM,
     EigenCAM,
     EigenGradCAM,
-    FullGrad,
     GradCAM,
     GradCAMElementWise,
     GradCAMPlusPlus,
     HiResCAM,
     LayerCAM,
     RandomCAM,
-    ScoreCAM,
     XGradCAM,
 )
-from pytorch_grad_cam.utils.image import scale_cam_image, show_cam_on_image
+from pytorch_grad_cam.utils.image import show_cam_on_image
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[1]  # YOLOv5 root directory
@@ -38,7 +34,7 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 from models.common import DetectMultiBackend
 from utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages
-from utils.general import check_file, check_img_size, non_max_suppression, print_args, scale_boxes
+from utils.general import check_file, check_img_size, non_max_suppression, print_args
 from utils.plots import Annotator, colors
 from utils.torch_utils import select_device
 
