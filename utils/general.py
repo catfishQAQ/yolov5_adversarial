@@ -1,4 +1,4 @@
-# YOLOv5 🚀 by Ultralytics, AGPL-3.0 license
+# Ultralytics YOLOv5 🚀, AGPL-3.0 license
 """General utils."""
 
 import contextlib
@@ -343,7 +343,7 @@ def check_online():
     import socket
 
     def run_once():
-        # Check once
+        """Checks internet connectivity by attempting to create a connection to "1.1.1.1" on port 443."""
         try:
             socket.create_connection(("1.1.1.1", 443), 5)  # check host accessibility
             return True
@@ -587,7 +587,7 @@ def check_amp(model):
     from models.common import AutoShape, DetectMultiBackend
 
     def amp_allclose(model, im):
-        # All close FP32 vs AMP results
+        """Compares FP32 and AMP model inference outputs, ensuring they are close within a 10% absolute tolerance."""
         m = AutoShape(model, verbose=False)  # model
         a = m(im).xywhn[0]  # FP32 inference
         m.amp = True
@@ -616,10 +616,12 @@ def yaml_load(file="data.yaml"):
         return yaml.safe_load(f)
 
 
-def yaml_save(file="data.yaml", data={}):
+def yaml_save(file="data.yaml", data=None):
     """Safely saves `data` to a YAML file specified by `file`, converting `Path` objects to strings; `data` is a
     dictionary.
     """
+    if data is None:
+        data = {}
     with open(file, "w") as f:
         yaml.safe_dump({k: str(v) if isinstance(v, Path) else v for k, v in data.items()}, f, sort_keys=False)
 
@@ -650,7 +652,7 @@ def download(url, dir=".", unzip=True, delete=True, curl=False, threads=1, retry
     """Downloads and optionally unzips files concurrently, supporting retries and curl fallback."""
 
     def download_one(url, dir):
-        # Download 1 file
+        """Downloads a single file from `url` to `dir`, with retry support and optional curl fallback."""
         success = True
         if os.path.isfile(url):
             f = Path(url)  # filename

@@ -1,4 +1,4 @@
-# YOLOv5 🚀 by Ultralytics, AGPL-3.0 license
+# Ultralytics YOLOv5 🚀, AGPL-3.0 license
 """PyTorch utils."""
 
 import math
@@ -37,6 +37,7 @@ def smart_inference_mode(torch_1_9=check_version(torch.__version__, "1.9.0")):
     """Applies torch.inference_mode() if torch>=1.9.0, else torch.no_grad() as a decorator for functions."""
 
     def decorate(fn):
+        """Applies torch.inference_mode() if torch>=1.9.0, else torch.no_grad() to the decorated function."""
         return (torch.inference_mode if torch_1_9 else torch.no_grad)()(fn)
 
     return decorate

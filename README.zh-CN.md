@@ -38,7 +38,7 @@ YOLOv5 🚀 是世界上最受欢迎的视觉 AI，代表<a href="https://ultral
   <img src="https://github.com/ultralytics/assets/raw/main/social/logo-transparent.png" width="2%">
   <a href="https://www.tiktok.com/@ultralytics"><img src="https://github.com/ultralytics/assets/raw/main/social/logo-social-tiktok.png" width="2%" alt="Ultralytics TikTok"></a>
   <img src="https://github.com/ultralytics/assets/raw/main/social/logo-transparent.png" width="2%">
-  <a href="https://www.instagram.com/ultralytics/"><img src="https://github.com/ultralytics/assets/raw/main/social/logo-social-instagram.png" width="2%" alt="Ultralytics Instagram"></a>
+  <a href="https://ultralytics.com/bilibili"><img src="https://github.com/ultralytics/assets/raw/main/social/logo-social-bilibili.png" width="2%" alt="Ultralytics BiliBili"></a>
   <img src="https://github.com/ultralytics/assets/raw/main/social/logo-transparent.png" width="2%">
   <a href="https://ultralytics.com/discord"><img src="https://github.com/ultralytics/assets/raw/main/social/logo-social-discord.png" width="2%" alt="Ultralytics Discord"></a>
 </div>
@@ -164,7 +164,7 @@ python train.py --data coco.yaml --epochs 300 --weights '' --cfg yolov5n.yaml  -
 ## <div align="center">模块集成</div>
 
 <br>
-<a align="center" href="https://bit.ly/ultralytics_hub" target="_blank">
+<a align="center" href="https://ultralytics.com/hub" target="_blank">
 <img width="100%" src="https://github.com/ultralytics/assets/raw/main/im/integrations-loop.png"></a>
 <br>
 <br>
@@ -189,9 +189,9 @@ python train.py --data coco.yaml --epochs 300 --weights '' --cfg yolov5n.yaml  -
 
 ## <div align="center">Ultralytics HUB</div>
 
-[Ultralytics HUB](https://bit.ly/ultralytics_hub) 是我们的⭐**新的**用于可视化数据集、训练 YOLOv5 🚀 模型并以无缝体验部署到现实世界的无代码解决方案。现在开始 **免费** 使用他！
+[Ultralytics HUB](https://ultralytics.com/hub) 是我们的⭐**新的**用于可视化数据集、训练 YOLOv5 🚀 模型并以无缝体验部署到现实世界的无代码解决方案。现在开始 **免费** 使用他！
 
-<a align="center" href="https://bit.ly/ultralytics_hub" target="_blank">
+<a align="center" href="https://ultralytics.com/hub" target="_blank">
 <img width="100%" src="https://github.com/ultralytics/assets/raw/main/im/ultralytics-hub.png"></a>
 
 ## <div align="center">为什么选择 YOLOv5</div>
@@ -358,8 +358,8 @@ YOLOv5 [release v6.2](https://github.com/ultralytics/yolov5/releases) 带来对�
 - **准确性**都在单模型单尺度上计算，数据集使用 [ImageNet-1k](https://www.image-net.org/index.php) 。<br>复现命令 `python classify/val.py --data ../datasets/imagenet --img 224`
 - **推理速度**是使用 100 个推理图像进行平均得到，测试环境使用谷歌 [Colab Pro](https://colab.research.google.com/signup) V100 高 RAM 实例。<br>复现命令 `python classify/val.py --data ../datasets/imagenet --img 224 --batch 1`
 - **模型导出**到 FP32 的 ONNX 和 FP16 的 TensorRT 使用 `export.py` 。<br>复现命令 `python export.py --weights yolov5s-cls.pt --include engine onnx --imgsz 224`
-  </details>
-  </details>
+</details>
+</details>
 
 <details>
   <summary>分类训练示例 &nbsp;<a href="https://colab.research.google.com/github/ultralytics/yolov5/blob/master/classify/tutorial.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a></summary>
@@ -463,7 +463,7 @@ Ultralytics 提供两种许可证选项以适应各种使用场景：
   <img src="https://github.com/ultralytics/assets/raw/main/social/logo-transparent.png" width="3%">
   <a href="https://www.tiktok.com/@ultralytics"><img src="https://github.com/ultralytics/assets/raw/main/social/logo-social-tiktok.png" width="3%" alt="Ultralytics TikTok"></a>
   <img src="https://github.com/ultralytics/assets/raw/main/social/logo-transparent.png" width="3%">
-  <a href="https://www.instagram.com/ultralytics/"><img src="https://github.com/ultralytics/assets/raw/main/social/logo-social-instagram.png" width="3%" alt="Ultralytics Instagram"></a>
+  <a href="https://ultralytics.com/bilibili"><img src="https://github.com/ultralytics/assets/raw/main/social/logo-social-bilibili.png" width="3%" alt="Ultralytics BiliBili"></a>
   <img src="https://github.com/ultralytics/assets/raw/main/social/logo-transparent.png" width="3%">
   <a href="https://ultralytics.com/discord"><img src="https://github.com/ultralytics/assets/raw/main/social/logo-social-discord.png" width="3%" alt="Ultralytics Discord"></a>
 </div>

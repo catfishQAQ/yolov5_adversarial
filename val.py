@@ -1,4 +1,4 @@
-# YOLOv5 🚀 by Ultralytics, AGPL-3.0 license
+# Ultralytics YOLOv5 🚀, AGPL-3.0 license
 """
 Validate a trained YOLOv5 detection model on a detection dataset.
 
@@ -150,6 +150,7 @@ def run(
     anno_json=None,
     target_class=None,
 ):
+    """Evaluates model on a dataset and logs performance metrics, results are saved to specific directories."""
     # Initialize/load model and set device
     training = model is not None
     if training:  # called by train.py
