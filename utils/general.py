@@ -59,7 +59,7 @@ DATASETS_DIR = Path(os.getenv("YOLOv5_DATASETS_DIR", ROOT.parent / "datasets")) 
 AUTOINSTALL = str(os.getenv("YOLOv5_AUTOINSTALL", True)).lower() == "true"  # global auto-install mode
 VERBOSE = str(os.getenv("YOLOv5_VERBOSE", True)).lower() == "true"  # global verbose mode
 TQDM_BAR_FORMAT = "{l_bar}{bar:10}{r_bar}"  # tqdm bar format
-FONT = "Arial.ttf"  # https://ultralytics.com/assets/Arial.ttf
+FONT = "Arial.ttf"  # https://github.com/ultralytics/assets/releases/download/v0.0.0/Arial.ttf
 
 torch.set_printoptions(linewidth=320, precision=5, profile="long")
 np.set_printoptions(linewidth=320, formatter={"float_kind": "{:11.5g}".format})  # format short g, %precision=5
@@ -188,7 +188,8 @@ CONFIG_DIR = user_config_dir()  # Ultralytics settings dir
 
 
 class Profile(contextlib.ContextDecorator):
-    # YOLOv5 Profile class. Usage: @Profile() decorator or 'with Profile():' context manager
+    """Context manager and decorator for profiling code execution time, with optional CUDA synchronization."""
+
     def __init__(self, t=0.0, device: torch.device = None):
         """Initializes a profiling context for YOLOv5 with optional timing threshold and device specification."""
         self.t = t
@@ -213,7 +214,8 @@ class Profile(contextlib.ContextDecorator):
 
 
 class Timeout(contextlib.ContextDecorator):
-    # YOLOv5 Timeout class. Usage: @Timeout(seconds) decorator or 'with Timeout(seconds):' context manager
+    """Enforces a timeout on code execution, raising TimeoutError if the specified duration is exceeded."""
+
     def __init__(self, seconds, *, timeout_msg="", suppress_timeout_errors=True):
         """Initializes a timeout context/decorator with defined seconds, optional message, and error suppression."""
         self.seconds = int(seconds)
@@ -239,7 +241,8 @@ class Timeout(contextlib.ContextDecorator):
 
 
 class WorkingDirectory(contextlib.ContextDecorator):
-    # Usage: @WorkingDirectory(dir) decorator or 'with WorkingDirectory(dir):' context manager
+    """Context manager/decorator to temporarily change the working directory within a 'with' statement or decorator."""
+
     def __init__(self, new_dir):
         """Initializes a context manager/decorator to temporarily change the working directory."""
         self.dir = new_dir  # new dir
@@ -511,14 +514,13 @@ def check_font(font=FONT, progress=False):
     font = Path(font)
     file = CONFIG_DIR / font.name
     if not font.exists() and not file.exists():
-        url = f"https://ultralytics.com/assets/{font.name}"
+        url = f"https://github.com/ultralytics/assets/releases/download/v0.0.0/{font.name}"
         LOGGER.info(f"Downloading {url} to {file}...")
         torch.hub.download_url_to_file(url, str(file), progress=progress)
 
 
 def check_dataset(data, autodownload=True):
     """Validates and/or auto-downloads a dataset, returning its configuration as a dictionary."""
-
     # Download (optional)
     extract_dir = ""
     if isinstance(data, (str, Path)) and (is_zipfile(data) or is_tarfile(data)):
@@ -1023,7 +1025,6 @@ def non_max_suppression(
     Returns:
          list of detections, on (n,6) tensor per image [xyxy, conf, cls]
     """
-
     # Checks
     assert 0 <= conf_thres <= 1, f"Invalid Confidence threshold {conf_thres}, valid values are between 0.0 and 1.0"
     assert 0 <= iou_thres <= 1, f"Invalid IoU {iou_thres}, valid values are between 0.0 and 1.0"
