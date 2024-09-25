@@ -42,7 +42,7 @@ Refer to [adv_patch_gen/conv_visdrone_2_yolo/README.md](adv_patch_gen/conv_visdr
 ```shell
 # inside a python virtual environment
 pip install gdown
-gdown 1Nw71j_zw_TUrXjR6VRvgp5wJmDePZMoS
+gdown 1LOlHeKz6G8ZEBVBaej_s05nUvnDdlHFc
 # unzip models into runs/train directory
 mkdir -p runs/train
 unzip coco_e300_4Class_Vehicle.zip -d runs/train
