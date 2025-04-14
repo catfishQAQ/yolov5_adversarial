@@ -194,11 +194,11 @@ class PatchApplier(nn.Module):
             F = foregraound (patch, or adv_batch)
             B = background (image, or img_batch)
     """
-
+    #默认值是 1，表示默认使用完全贴图（不透明 patch）
     def __init__(self, patch_alpha: float = 1):
         super(PatchApplier, self).__init__()
         self.patch_alpha = patch_alpha
-
+    #将每个目标的 patch（按位置对齐）贴到原图上
     def forward(self, img_batch, adv_batch):
         advs = torch.unbind(adv_batch, 1)
         for adv in advs:
