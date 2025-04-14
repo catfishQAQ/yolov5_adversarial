@@ -56,6 +56,7 @@ class PatchTransformer(nn.Module):
         # add gaussian noise to reduce contrast with a stohastic process
         p_c, p_h, p_w = adv_patch.shape
         if use_mul_add_gau:
+            # 添加高斯乘法和加法的扰动，使颜色亮度有差异，提升泛化能力。并使用种植滤波减少噪点
             mul_gau = torch.normal(
                 np.random.uniform(*self.m_gau_mean),
                 np.random.uniform(*self.m_gau_std),
@@ -77,6 +78,7 @@ class PatchTransformer(nn.Module):
 
         # Contrast, brightness and noise transforms
         if do_transforms:
+            # 为每个 patch 应用不同的对比度、亮度、噪声增强，限制在合法的像素亮度范围内
             # Create random contrast tensor
             contrast = self.tensor(batch_size).uniform_(self.min_contrast, self.max_contrast)
             contrast = contrast.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1)
@@ -96,6 +98,7 @@ class PatchTransformer(nn.Module):
             adv_batch = torch.clamp(adv_batch, 0.000001, 0.99999)
 
         # Where the label class_id is 1 we don't want a patch (padding) --> fill mask with zero's
+        # 根据标签信息（lab_batch）生成一个与 patch 相同 shape 的“掩码”张量，用来确定是否应该给某个目标贴 patch。 lab_batch[..., 0] 取出每个目标的 class_id，shape 为 [B, max_labels]
         cls_ids = lab_batch[..., 0].unsqueeze(-1)  # equiv to torch.narrow(lab_batch, 2, 0, 1)
         cls_mask = cls_ids.expand(-1, -1, p_c)
         cls_mask = cls_mask.unsqueeze(-1)
@@ -106,11 +109,13 @@ class PatchTransformer(nn.Module):
         msk_batch = self.tensor(cls_mask.size()).fill_(1)
 
         # Pad patch and mask to image dimensions
-        patch_pad = nn.ConstantPad2d((int(pad + 0.5), int(pad), int(pad + 0.5), int(pad)), 0)
+        #定义一个 给 patch 做上下左右 padding 的函数，对 patch 和 mask 做 padding
+        patch_pad = nn.ConstantPad2d((int(pad + 0.5), int(pad), int(pad + 0.5), int(pad)), 0) 
         adv_batch = patch_pad(adv_batch)
         msk_batch = patch_pad(msk_batch)
 
         # Rotation and rescaling transforms
+        #计算总目标数量，生成旋转角度，会在后面构建仿射变换矩阵 theta 时用到
         anglesize = lab_batch.size(0) * lab_batch.size(1)
         if do_rotate:
             angle = self.tensor(anglesize).uniform_(self.minangle, self.maxangle)
@@ -118,12 +123,14 @@ class PatchTransformer(nn.Module):
             angle = self.tensor(anglesize).fill_(0)
 
         # Resizes and rotates
+        #计算 patch 当前的大小，把标签从归一化坐标转为像素坐标，计算每个目标应该贴的 patch 大小
         current_patch_size = adv_patch.size(-1)
         lab_batch_scaled = self.tensor(lab_batch.size()).fill_(0)
         lab_batch_scaled[:, :, 1] = lab_batch[:, :, 1] * m_w
         lab_batch_scaled[:, :, 2] = lab_batch[:, :, 2] * m_w
         lab_batch_scaled[:, :, 3] = lab_batch[:, :, 3] * m_w
         lab_batch_scaled[:, :, 4] = lab_batch[:, :, 4] * m_w
+        #计算每个目标应该贴的 patch 大小，取出目标框中心点位置 + 偏移量
         tsize = np.random.uniform(*self.t_size_frac)
         target_size = torch.sqrt(
             ((lab_batch_scaled[:, :, 3].mul(tsize)) ** 2) + ((lab_batch_scaled[:, :, 4].mul(tsize)) ** 2)
@@ -133,6 +140,7 @@ class PatchTransformer(nn.Module):
         target_y = lab_batch[:, :, 2].view(np.prod(batch_size))
         targetoff_x = lab_batch[:, :, 3].view(np.prod(batch_size))
         targetoff_y = lab_batch[:, :, 4].view(np.prod(batch_size))
+        #为每个目标随机生成一个位置偏移，得到新的贴 patch 中心位置 (target_x, target_y)
         if rand_loc:
             off_x = targetoff_x * (self.tensor(targetoff_x.size()).uniform_(*self.x_off_loc))
             target_x = target_x + off_x
@@ -140,11 +148,11 @@ class PatchTransformer(nn.Module):
             target_y = target_y + off_y
         scale = target_size / current_patch_size
         scale = scale.view(anglesize)
-
+        #将 [B, max_labels, ...] 拉平成 [B×max_labels, ...]，准备做变换
         s = adv_batch.size()
         adv_batch = adv_batch.view(s[0] * s[1], s[2], s[3], s[4])
         msk_batch = msk_batch.view(s[0] * s[1], s[2], s[3], s[4])
-
+        #计算每个 patch 要移动到图像哪个位置，基于目标中心点位置
         tx = (-target_x + 0.5) * 2
         ty = (-target_y + 0.5) * 2
         sin = torch.sin(angle)
@@ -152,6 +160,7 @@ class PatchTransformer(nn.Module):
 
         # Theta = rotation/rescale matrix
         # Theta = input batch of affine matrices with shape (N×2×3) for 2D or (N×3×4) for 3D
+        #构造仿射变换矩阵 theta，把前面算出来的角度、缩放、位置写进 theta
         theta = self.tensor(anglesize, 2, 3).fill_(0)
         theta[:, 0, 0] = cos / scale
         theta[:, 0, 1] = sin / scale
@@ -159,16 +168,16 @@ class PatchTransformer(nn.Module):
         theta[:, 1, 0] = -sin / scale
         theta[:, 1, 1] = cos / scale
         theta[:, 1, 2] = -tx * sin / scale + ty * cos / scale
-
+        #根据每个 theta 创建一个采样网格 grid，告诉系统：“我要把 patch 贴到哪里”，使用 grid_sample 执行变换
         grid = F.affine_grid(theta, adv_batch.shape)
         adv_batch_t = F.grid_sample(adv_batch, grid)
         msk_batch_t = F.grid_sample(msk_batch, grid)
-
+        #恢复原始维度，限制像素值范围
         adv_batch_t = adv_batch_t.view(s[0], s[1], s[2], s[3], s[4])
         msk_batch_t = msk_batch_t.view(s[0], s[1], s[2], s[3], s[4])
 
         adv_batch_t = torch.clamp(adv_batch_t, 0.000001, 0.999999)
-
+        #返回最终的贴图结果
         return adv_batch_t * msk_batch_t
 
 
