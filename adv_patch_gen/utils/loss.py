@@ -104,7 +104,7 @@ class TotalVariationLoss(nn.Module):
         # 归一化处理
         return tv / torch.numel(adv_patch)
 
-
+#NPSLoss 计算 adversarial patch 中的每个像素颜色与“可打印颜色表”中最近的差距，从而惩罚那些 “不能被打印机打印出来”的颜色
 class NPSLoss(nn.Module):
     """NMSLoss: calculates the non-printability-score loss of a patch.
     Module providing the functionality necessary to calculate the non-printability score (NMS) of an adversarial patch.
@@ -124,17 +124,22 @@ class NPSLoss(nn.Module):
     def forward(self, adv_patch):
         # calculate euclidean distance between colors in patch and colors in printability_array
         # square root of sum of squared difference
+        #计算 patch 中颜色与可打印颜色的差距
+        #self.printability_array shape: [num_colors, 3, H, W]
         color_dist = adv_patch - self.printability_array + 0.000001
         color_dist = color_dist**2
         color_dist = torch.sum(color_dist, 1) + 0.000001
         color_dist = torch.sqrt(color_dist)
+        #最终 color_dist shape: [num_colors, H, W]，patch 上 (h, w) 这个像素 与 第 i 个可打印颜色 的欧几里得距离
         # use the min distance
+        #对每个像素，选最近的一个可打印颜色，对第 0 维（所有可打印颜色）取最小值，得到每个像素点“到最近可打印颜色”的最小距离， shape: [H, W]
         color_dist_prod = torch.min(color_dist, 0)[0]
         # calculate the nps by summing over all pixels
+        #把所有像素的误差加起来，变成一个 loss 值
         nps_score = torch.sum(color_dist_prod, 0)
         nps_score = torch.sum(nps_score, 0)
         return nps_score / torch.numel(adv_patch)
-
+        #从文件中读取颜色值（RGB 三元组），返回一个张量表示这些颜色，shape 为 [num_colors, 3, H, W]
     def get_printability_array(self, triplet_scores_fpath: str, size: Tuple[int, int]) -> torch.Tensor:
         """
         Get printability tensor array holding the rgb triplets (range [0,1]) loaded from triplet_scores_fpath
@@ -142,6 +147,7 @@ class NPSLoss(nn.Module):
             triplet_scores_fpath: str, path to csv file with RGB triplets sep by commas in newlines
             size: Tuple[int, int], Tuple with height, width of the patch
         """
+        #读取 CSV 文件中的 RGB 值，拆分成字符串列表 → ["0.5", "0.3", "0.2"]，存到 ref_triplet_list 中，最终是一个二维列表
         ref_triplet_list = []
         # read in reference printability triplets into a list
         with open(triplet_scores_fpath, "r", encoding="utf-8") as f:
@@ -149,6 +155,7 @@ class NPSLoss(nn.Module):
                 ref_triplet_list.append(line.strip().split(","))
 
         p_h, p_w = size
+        #把每个颜色 triplet 扩展成 [3, H, W] 的 RGB patch
         printability_array = []
         for ref_triplet in ref_triplet_list:
             r, g, b = map(float, ref_triplet)
@@ -156,4 +163,5 @@ class NPSLoss(nn.Module):
                 [torch.full((p_h, p_w), r), torch.full((p_h, p_w), g), torch.full((p_h, p_w), b)]
             )
             printability_array.append(ref_tensor_img.float())
+            #返回一个堆叠后的大 tensor
         return torch.stack(printability_array)
