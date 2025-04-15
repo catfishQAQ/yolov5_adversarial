@@ -393,6 +393,7 @@ class PatchTrainer:
 def main():
     parser = get_argparser()
     args = parser.parse_args()
+    #load_config_object() 会读取这个 JSON 文件，转成 EasyDict 类型的对象，赋值给 cfg
     cfg = load_config_object(args.config)
     trainer = PatchTrainer(cfg)
     trainer.train()
