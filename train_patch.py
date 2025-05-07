@@ -70,7 +70,7 @@ class PatchTrainer:
 
         # set log dir
         cfg.log_dir = osp.join(cfg.log_dir, f'{time.strftime("%Y%m%d-%H%M%S")}_{cfg.patch_name}')
-        #初始化 TensorBoard 写入器
+        #初始化 TensorBoard 写入器; Initialising the TensorBoard Writer
         self.writer = self.init_tensorboard(cfg.log_dir, cfg.tensorboard_port)
         # save config parameters to tensorboard logs
         for cfg_key, cfg_val in cfg.items():
@@ -81,16 +81,16 @@ class PatchTrainer:
         if cfg.augment_image:
             transforms = T.Compose(
                 [
-                    T.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1)),#加入高斯模糊，模拟图像模糊的情况
-                    T.ColorJitter(brightness=0.2, hue=0.04, contrast=0.1),#颜色扰动，包括亮度、色调、对比度的微调
-                    T.RandomAdjustSharpness(sharpness_factor=2),#随机调整图像的清晰度（锐化效果）
+                    T.GaussianBlur(kernel_size=(3, 3), sigma=(0.1, 1)),#加入高斯模糊，模拟图像模糊的情况; Add Gaussian blur to simulate a blurred image
+                    T.ColorJitter(brightness=0.2, hue=0.04, contrast=0.1),#颜色扰动，包括亮度、色调、对比度的微调; Colour perturbation, including fine tuning of brightness, hue and contrast
+                    T.RandomAdjustSharpness(sharpness_factor=2),#随机调整图像的清晰度（锐化效果）; Random adjustment of image sharpness (sharpening effect)
                 ]
             )
 
         # load training dataset
         self.train_loader = torch.utils.data.DataLoader(
             YOLODataset(
-                image_dir=cfg.image_dir,#图像所在目录
+                image_dir=cfg.image_dir,#图像所在目录; The directory where the image is located
                 label_dir=cfg.label_dir,#标签目录，YOLO 格式的 .txt 文件，每张图一个标签文件
                 max_labels=cfg.max_labels,#	每张图最多读取多少个标签
                 model_in_sz=cfg.model_in_sz,#模型输入图像大小（H, W）
