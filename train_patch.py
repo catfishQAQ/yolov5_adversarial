@@ -248,7 +248,7 @@ class PatchTrainer:
                         tv = self.tv_loss(adv_patch) if self.cfg.tv_mult != 0 else zero_tensor
                     #总 loss + 反向传播 + 更新 Total loss + backpropagation + update
                     det_loss = torch.mean(max_prob)
-                    sal_loss = sal * self.cfg.sal_mult/权重
+                    sal_loss = sal * self.cfg.sal_mult
                     nps_loss = nps * self.cfg.nps_mult
                     tv_loss = torch.max(tv * self.cfg.tv_mult, min_tv_loss)
 
